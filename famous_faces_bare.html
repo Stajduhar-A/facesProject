@@ -1,0 +1,3407 @@
+<!DOCTYPE html>
+<head>
+    <script type="text/javascript" src="lib/vendors/jspsych-6.0.0/jspsych.js"></script>
+    <link rel="stylesheet" type="text/css" href="lib/vendors/jspsych-6.0.0/css/jspsych.css"/>
+    <script type="text/javascript" src="lib/vendors/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="lib/jspsych-pavlovia-3.0.6.js"></script>
+    <script src="jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-survey-html-form.js"></script>
+    <script src="jspsych-external-html.js"></script>
+    <script src="jspsych-survey-likert.js"></script>
+</head>
+<body style="background-color: rgb(128, 128, 128); font-size: 20px;">
+    <script>
+
+    timeline = [];
+
+    var pavlovia_init = {
+    type: "pavlovia",
+    command: "init"
+}
+
+    var welcome = {
+    type: "html-keyboard-response",
+    stimulus: "Welcome to the experiment. Press any key to begin."
+    }
+
+    var welcome = {
+type: "html-keyboard-response",
+stimulus: "Welcome to the experiment. Press any key to begin."
+}
+var ask_consent = function(elem) {
+    if(document.getElementById('consent_checkbox').checked) {
+        return true;
+        
+    }
+    else {
+        alert("Please consent before continuing.");
+        return false;
+        
+    }
+    return false;
+    
+};
+var consent = {
+type: 'external-html',
+url: 'consent.html',
+cont_btn: "start",
+check_fn: ask_consent
+}
+
+    const survey = {
+    type: "survey-html-form",
+    html: "<div style='text-align: left; vertical-align: top; display: inline-block; float: left; width: 100%'>"+
+      "<p><u>Age:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='age'></p>"+
+      "<p><u>Handedness:</u> </strong><input type='radio' id='left' name='handedness' value='left'>"+
+      "<label for='left'>Left-handed</label>"+
+      "<input type='radio' id='right' name='handedness' value='right' checked>"+
+      "<label for='right'>Right-handed</label>"+
+      "<input type='radio' id='ambi' name='handedness' value='ambi'>"+
+      "<label for='ambi'>Ambidextrous</label></p>"+
+      "<p><u>Sex:</u> <input type='radio' id='female' name='sex' value='female' checked>"+
+      "<label for='female'>Female</label>"+
+      "<input type='radio' id='male' name='sex' value='male'>"+
+      "<label for='male'>Male</label>"+
+      "<input type='radio' name='sex' value='other'><label for='other'>Other, please specify: </label>"+ 
+      "<input type='text' name='other_sex' id='other_sex' value=''></p>"+
+      "</div>",
+    preamble: "<strong>Please provide some personal information: </strong>",
+    button_label: "continue"
+  }
+  var instructions = {
+      type: 'html-keyboard-response',
+      stimulus: '<p>In this experiment, you will view a series of faces. If the face is familiar to you, press K.</p>'+
+                '<p>If the face is unfamiliar to you, press F. You will then be asked to briefly identify each face that is familair to you.<p>'+
+                '<p>You can identify them in various ways. For example, you can specify their job/occupation, role, name, or any other identifier.</p>'+
+                '<p>To go to the practice round, press any key.</p>'
+  }
+
+var QE = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/queen.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_QE = {
+    type: 'survey-html-form',
+    html: '<img src="famous_faces/queen.jpg"></img>'+
+          '<p><u>Role/occupation/name/other identifier:</u> <input style="font-size: 18px; line-height: 1.6em;" input type="text" id="start" name="identifier" required></p>' +
+          "<p>For example, you can choose to identify her as 'Queen', 'Queen Elizabeth', or 'Queen of England'</p>"
+}
+
+var if_node_QE = {
+    timeline: [if_QE],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return false;
+        }
+    }
+}
+
+var QE_2 = {
+    type: 'survey-html-form',
+    html: '<img src="famous_faces/queen.jpg"></img>'+ '<p><u>Role/occupation/name/other identifier:</u> <input style="font-size: 18px; line-height: 1.6em;" input type="text" id="start" name="identifier" ></p>' +
+          "<p>For example, you can choose to identify her as 'Queen', 'Queen Elizabeth', or 'Queen of England'. Press continue.</p>",
+}
+
+var MC = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/52_MariahCarrey.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+var if_MC = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start2' name='identifier'></p>"
+}
+
+var if_node_MC = {
+    timeline: [if_MC],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_75 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/75_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_75 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start3' name='identifier'></p>"
+}
+
+var if_node_NF_75 = {
+    timeline: [if_NF_75],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_66 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/66_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_66 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start4' name='identifier'></p>"
+}
+
+var if_node_NF_66 = {
+    timeline: [if_NF_66],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_79 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/79_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_79 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_79 = {
+    timeline: [if_NF_79],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JD = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/50_JohnnyDepp.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JD = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JD = {
+    timeline: [if_JD],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_96 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/96_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_96 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_96 = {
+    timeline: [if_NF_96],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_100 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/100_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_100 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_100 = {
+    timeline: [if_NF_100],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var CH = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/35_ChrisHemsworth.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_CH = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_CH = {
+    timeline: [if_CH],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var BK = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/6_Beyone.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_BK = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_BK = {
+    timeline: [if_BK],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var KJ = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/18_Kylie_Jenner.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_KJ = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_KJ = {
+        timeline: [if_KJ],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var ZE = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/28_ZacEfron.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_ZE = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_ZE = {
+        timeline: [if_ZE],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var SM = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/24_ShawnMendes.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_SM = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_SM = {
+        timeline: [if_SM],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_72 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/72_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_72 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_72 = {
+        timeline: [if_NF_72],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_92 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/92_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_92 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_92 = {
+        timeline: [if_NF_92],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_85 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/85_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+
+    var if_NF_85 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_85 = {
+        timeline: [if_NF_85],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var LJ = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/19_Lebron_James.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_LJ = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_LJ = {
+        timeline: [if_LJ],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_63= {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/63_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_63 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_63 = {
+        timeline: [if_NF_63],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_94= {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/94_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_94 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_94 = {
+        timeline: [if_NF_94],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var MM= {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/14_Meghan_Markle.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_MM = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_MM = {
+        timeline: [if_MM],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_81= {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/81_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_81 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_81 = {
+        timeline: [if_NF_81],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var BC= {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/32_BradleyCooper.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_BC = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_BC = {
+        timeline: [if_BC],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_112= {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/112_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_112 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_112 = {
+        timeline: [if_NF_112],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var AG = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/9_Drake.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_AG= {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_AG = {
+        timeline: [if_AG],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var JA = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/54_jennifer_aniston.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_JA= {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_JA = {
+        timeline: [if_JA],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var BE = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/31_BillieEilish.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+
+    var if_BE= {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_BE = {
+        timeline: [if_BE],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_71 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/71_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_71= {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_71 = {
+        timeline: [if_NF_71],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var R = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/21_Rihanna.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_R = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_R = {
+        timeline: [if_R],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_58 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/58_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_58 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_58 = {
+        timeline: [if_NF_58],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var BP = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/7_Brad-Pitt.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_BP = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_BP = {
+        timeline: [if_BP],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var TH = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/26_TomHolland.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_TH = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_TH = {
+        timeline: [if_TH],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_80 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/80_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_80 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_80 = {
+        timeline: [if_NF_80],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    var MCyrus = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/45_MileyCyrus.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+
+    var if_MCyrus = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+
+    var if_node_MCyrus = {
+        timeline: [if_MCyrus],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    var NF_74 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/74_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_74 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_74 = {
+        timeline: [if_NF_74],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_90 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/90_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_90 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_90 = {
+        timeline: [if_NF_90],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_86 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/86_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_86 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_86 = {
+        timeline: [if_NF_86],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_93 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/93_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_93 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_93 = {
+        timeline: [if_NF_93],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_77 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/77_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_77 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_77 = {
+        timeline: [if_NF_77],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var SJ = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/43_ScarlettJohansson.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_SJ = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_SJ = {
+        timeline: [if_SJ],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var EM = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/41_ElonMusk.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_EM = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_EM = {
+        timeline: [if_EM],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var EP = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/55_Elvis_Presley.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_EP = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_EP = {
+        timeline: [if_EP],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_67 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/67_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_67 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_67 = {
+        timeline: [if_NF_67],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_76 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/76_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_76 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_76 = {
+        timeline: [if_NF_76],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_108 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/108_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_108 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_108 = {
+        timeline: [if_NF_108],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_98 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/98_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_98 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_98 = {
+        timeline: [if_NF_98],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var TC = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/56_tom_Cruise.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_TC = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_TC = {
+        timeline: [if_TC],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var RR = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/23_Ryan_Reynolds.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_RR = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_RR = {
+        timeline: [if_RR],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var MD = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/53_MattDamon.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_MD = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_MD = {
+        timeline: [if_MD],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_107 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/107_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_107 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_107 = {
+        timeline: [if_NF_107],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_91 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/91_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_91 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_91 = {
+        timeline: [if_NF_91],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_110 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/110_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_110 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_110 = {
+        timeline: [if_NF_110],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var NF_65 = {
+        type: 'image-keyboard-response',
+        stimulus: 'non_famous_faces/65_NF.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_NF_65 = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_NF_65 = {
+        timeline: [if_NF_65],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var CB = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/37_ChristianBale.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_CB = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_CB = {
+        timeline: [if_CB],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var KW = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/15_Kanye_West.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_KW = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_KW = {
+        timeline: [if_KW],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var KK = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/17_Kim_Kardasian.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_KK = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_KK = {
+        timeline: [if_KK],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var BO = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/5_Barack-Obama.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+    
+    var if_BO = {
+        type: 'survey-html-form',
+        html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+    }
+    
+    var if_node_BO = {
+        timeline: [if_BO],
+        conditional_function: function(){
+            // get the data from the previous trial,
+            // and check which key was pressed
+            var data = jsPsych.data.get().last(1).values()[0];
+            if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    
+    var AG = {
+        type: 'image-keyboard-response',
+        stimulus: 'famous_faces/4_Ariana-grande.jpg',
+        prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+        choices: ['f', 'k']
+    }
+
+var if_AG = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_AG = {
+    timeline: [if_AG],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_95 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/95_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_95 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_95 = {
+    timeline: [if_NF_95],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var AJ = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/2_Angelina-Jolie.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_AJ = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_AJ = {
+    timeline: [if_AJ],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_104 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/104_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_104 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_104 = {
+    timeline: [if_NF_104],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var KP = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/51_KatyPerry.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_KP = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_KP = {
+    timeline: [if_KP],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_69 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/69_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_69 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_69 = {
+    timeline: [if_NF_69],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_101 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/101_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_101 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_101 = {
+    timeline: [if_NF_101],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_78 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/78_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_78 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_78 = {
+    timeline: [if_NF_78],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JK = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/11_JK_Rowling.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JK = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JK = {
+    timeline: [if_JK],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_88 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/88_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_88 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_88 = {
+    timeline: [if_NF_88],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_61 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/61_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_61 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_61 = {
+    timeline: [if_NF_61],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_82 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/82_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_82 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_82 = {
+    timeline: [if_NF_82],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var CE = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/34_ChirsEvans.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_CE = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_CE = {
+    timeline: [if_CE],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var DJ = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/40_Dwayne_Johnson.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_DJ = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_DJ = {
+    timeline: [if_DJ],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var MZ = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/42_MarkZuckerberg.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_MZ = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_MZ = {
+    timeline: [if_MZ],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_111 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/111_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_111 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_111 = {
+    timeline: [if_NF_111],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_70 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/70_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_70 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_70 = {
+    timeline: [if_NF_70],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JC = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/49_JimCarrey.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JC = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JC = {
+    timeline: [if_JC],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_89 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/89_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_89 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_89 = {
+    timeline: [if_NF_89],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var MMonroe = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/33_Marilyn_Monroe.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_MMonroe = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_MMonroe = {
+    timeline: [if_MMonroe],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_105 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/105_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_105 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_105 = {
+    timeline: [if_NF_105],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_64 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/64_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_64 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_64 = {
+    timeline: [if_NF_64],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var WS = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/27_WillSmith.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_WS = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_WS = {
+    timeline: [if_WS],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_83 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/83_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_83 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_83 = {
+    timeline: [if_WS],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var HC = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/46_HClinton.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_HC = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_HC = {
+    timeline: [if_HC],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JL = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/48_Jennifer_Lopez.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JL = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JL = {
+    timeline: [if_JL],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_62 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/62_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_62 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_62 = {
+    timeline: [if_JL],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var KH = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/16_Kevin_Hart.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_KH = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_KH = {
+    timeline: [if_KH],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_73 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/73_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_73 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_73 = {
+    timeline: [if_NF_73],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JB = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/13_Justing_Bieber.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JB = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JB = {
+    timeline: [if_JB],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var DS = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/39_DavidSchwimmer.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_DS = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_DS = {
+    timeline: [if_DS],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_103 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/103_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_103 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_103 = {
+    timeline: [if_NF_103],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_59 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/59_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_59 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_59 = {
+    timeline: [if_NF_59],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_60 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/60_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_60 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_60 = {
+    timeline: [if_NF_60],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_84 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/84_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_84 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_84 = {
+    timeline: [if_NF_84],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_68 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/68_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_68 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_68 = {
+    timeline: [if_NF_68],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var RDJ = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/22_Robert_Downey_JR.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_RDJ = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_RDJ = {
+    timeline: [if_RDJ],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var RM = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/44_RamiMalek.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_RM = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_RM = {
+    timeline: [if_RM],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_109 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/109_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_109 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_109 = {
+    timeline: [if_NF_109],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var A = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/29_Adele.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_A = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_A = {
+    timeline: [if_A],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var BA = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/30_BenAffleck.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_BA = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_BA = {
+    timeline: [if_BA],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var DC = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/8_Dove_Cameron.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_DC = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_DC = {
+    timeline: [if_DC],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_102 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/102_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_102 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_102 = {
+    timeline: [if_NF_102],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var CP = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/36_ChrisPratt.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_CP = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_CP = {
+    timeline: [if_CP],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_99 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/99_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_99 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_99 = {
+    timeline: [if_NF_99],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var DB = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/38_DavidBeckham.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_DB = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_DB = {
+    timeline: [if_DB],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_106 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/106_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_106 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_106 = {
+    timeline: [if_NF_106],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var SG = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/1_Selena_Gomez.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_SG = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_SG = {
+    timeline: [if_SG],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var AH = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/3_anne-hathaway.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_AH = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_AH = {
+    timeline: [if_AH],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var EW = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/10_Emma_Waston.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_EW = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_EW = {
+    timeline: [if_EW],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_57 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/57_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_57 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_57 = {
+    timeline: [if_NF_57],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var JT = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/12_Justing_Trudeau.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_JT = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_JT = {
+    timeline: [if_JT],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var HS = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/47_HarryStyles.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_HS = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_HS = {
+    timeline: [if_HS],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var LDC = {
+    type: 'image-keyboard-response',
+    stimulus: 'famous_faces/20_LeoDe.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_LDC = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_LDC = {
+    timeline: [if_LDC],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_97 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/97_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_97 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_97 = {
+    timeline: [if_NF_97],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var NF_87 = {
+    type: 'image-keyboard-response',
+    stimulus: 'non_famous_faces/87_NF.jpg',
+    prompt: '<p>Press f for unfamiliar, or k for familiar.</p>',
+    choices: ['f', 'k']
+}
+
+var if_NF_87 = {
+    type: 'survey-html-form',
+    html: "<p><u>Role/occupation/name/other identifier:</u> <input style='font-size: 18px; line-height: 1.6em;' input type='text' id='start' name='identifier'></p>"
+}
+
+var if_node_NF_87 = {
+    timeline: [if_NF_87],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        var data = jsPsych.data.get().last(1).values()[0];
+        if(data.key_press == jsPsych.pluginAPI.convertKeyCharacterToKeyCode('f')){
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
+var instructions_2 = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Now you will view a series of names. As before, if you are familiar with the name, press K. If you are unfamiliar with the name, press F.</p>'+
+               '<pPress any key to begin.</p>',
+    choices: jsPsych.ALL_KEYS
+}
+
+var JK_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>JK Rowling</p>',
+    choices: [70,75]
+}
+
+var CP_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Chris Pratt</p>',
+    choices: [70,75]
+}
+
+var BK_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Beyonce Knowles</p>',
+    choices: [70,75]
+}
+
+var BA_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Ben Affleck</p>',
+    choices: [70,75]
+}
+
+var HS_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Harry Styles</p>',
+    choices: [70,75]
+}
+
+var AG_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Ariana Grande</p>',
+    choices: [70,75]
+}
+
+var CH_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Chris Hemsworth</p>',
+    choices: [70,75]
+}
+
+var CB_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Christian Bale</p>',
+    choices: [70,75]
+}
+
+var BO_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Barack Obama</p>',
+    choices: [70,75]
+}
+
+var BC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Bradley Cooper</p>',
+    choices: [70,75]
+}
+
+var EP_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Elvis Presley</p>',
+    choices: [70,75]
+}
+
+var KW_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Kanye West</p>',
+    choices: [70,75]
+}
+
+var DS_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>David Schwimmer</p>',
+    choices: [70,75]
+}
+
+var MZ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Mark Zuckerberg</p>',
+    choices: [70,75]
+}
+
+var ZE_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Zac Efron</p>',
+    choices: [70,75]
+}
+
+var BP_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Brad Pitt</p>',
+    choices: [70,75]
+}
+
+var KP_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Katy Perry</p>',
+    choices: [70,75]
+}
+
+var BE_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Billie Eilish</p>',
+    choices: [70,75]
+}
+
+var KH_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Kevin Hart</p>',
+    choices: [70,75]
+}
+
+var MD_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Matt Damon</p>',
+    choices: [70,75]
+}
+
+var RR_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Ryan Reynolds</p>',
+    choices: [70,75]
+}
+
+var JA_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Jennifer Aniston</p>',
+    choices: [70,75]
+}
+
+var SM_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Shawn Mendes</p>',
+    choices: [70,75]
+}
+
+var MCyrus_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Miley Cyrus</p>',
+    choices: [70,75]
+}
+
+var LDC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Leonardo DiCaprio</p>',
+    choices: [70,75]
+}
+
+var JL_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Jennifer Lopez</p>',
+    choices: [70,75]
+}
+
+var EM_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Elon Musk</p>',
+    choices: [70,75]
+}
+
+var CE_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Chris Evans</p>',
+    choices: [70,75]
+}
+
+var LJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Lebron James</p>',
+    choices: [70,75]
+}
+
+var SJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Scarlett Johansson</p>',
+    choices: [70,75]
+}
+
+var JB_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Justin Bieber</p>',
+    choices: [70,75]
+}
+
+var AJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Angelina Jolie</p>',
+    choices: [70,75]
+}
+
+var RDJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Robert Downey Jr.</p>',
+    choices: [70,75]
+}
+
+var MM_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Meghan Markle</p>',
+    choices: [70,75]
+}
+
+var KJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Kylie Jenner</p>',
+    choices: [70,75]
+}
+
+var TC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Tom Cruise</p>',
+    choices: [70,75]
+}
+
+var TH_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Tom Holland</p>',
+    choices: [70,75]
+}
+
+var AH_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Anne Hathaway</p>',
+    choices: [70,75]
+}
+
+var AG_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Drake</p>',
+    choices: [70,75]
+}
+
+var JT_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Justin Trudeau</p>',
+    choices: [70,75]
+}
+
+var RM_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Rami Malek</p>',
+    choices: [70,75]
+}
+
+var JD_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Johnny Depp</p>',
+    choices: [70,75]
+}
+
+var A_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Adele</p>',
+    choices: [70,75]
+}
+
+var TS_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Taylor Swift</p>',
+    choices: [70,75]
+}
+
+var SG_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Selena Gomez</p>',
+    choices: [70,75]
+}
+
+var MC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Mariah Carrey</p>',
+    choices: [70,75]
+}
+
+var DB_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>David Beckham</p>',
+    choices: [70,75]
+}
+
+var HC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Hillary Clinton</p>',
+    choices: [70,75]
+}
+
+var WS_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Will Smith</p>',
+    choices: [70,75]
+}
+
+var EW_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Emma Watson</p>',
+    choices: [70,75]
+}
+
+var R_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Rihanna</p>',
+    choices: [70,75]
+}
+
+var DJ_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Dwayne Johnson</p>',
+    choices: [70,75]
+}
+
+var JC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Jim Carrey</p>',
+    choices: [70,75]
+}
+
+var MMonroe_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Marilyn Monroe</p>',
+    choices: [70,75]
+}
+
+var DC_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Dove Cameron</p>',
+    choices: [70,75]
+}
+
+var KK_name = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>Kim Kardashian</p>',
+    choices: [70,75]
+}
+
+var scale = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"];
+
+var likert_trial = {
+  type: 'survey-likert',
+  questions: [
+    {prompt: "My face recognition ability is worse than most people.", name: 'question 1', labels: scale, required: true}, 
+    {prompt: "I have always had a bad memory for faces.", name: 'question 2', labels: scale, required: true},
+    {prompt: "I find it notably easier to recognize people who have distinctive facial features.", name: 'question 3', labels: scale, required: true},
+    {prompt: "I often mistake people I have met before for strangers.", name: 'question 4', labels: scale, required: true},
+    {prompt: "When I was at school I struggled to recognize my classmates.", name: 'question 5', labels: scale, required: true},
+    {prompt: "When people change their hairstyle, or wear hats, I have problems recognizing them.", name: 'question 6', labels: scale, required: true},
+    {prompt: "I sometimes have to warn new people I meet that I am 'bad with faces'.", name: 'quesion 7', labels: scale, required: true},
+    {prompt: "I find it easy to picture individual faces in my mind.", name: 'question 8', labels: scale, required: true},
+    {prompt: "I am better than most people at putting a 'name to a face'.", name: 'question 9', labels: scale, required: true},
+    {prompt: "Without hearing people's voices, I struggle to recognize them.", name: 'question 10', labels: scale, required: true},
+    {prompt: "Anxiety about face recognition has led me to avoid certain social or professional situations.", name: 'question 11', labels: scale, required: true},
+    {prompt: "I have to try harder than other people to memorize faces.", name: 'question 12', labels: scale, required: true},
+    {prompt: "I am very confident in my ability to recognize myself in photographs.", name: 'question 13', labels: scale, required: true},
+    {prompt: "I sometimes find movies hard to follow because of difficulties recognizing characters.", name: 'question 14', labels: scale, required: true},
+    {prompt: "My friends and family think I have bad face recognition or bad face memory.", name: 'question 15', labels: scale, required: true},
+    {prompt: "I feel like I frequently offend people by not recognizing who they are.", name: 'question 16', labels: scale, required: true},
+    {prompt: "It is easy for me to recognize individuals in situations that require people to wear similar clothes.", name: 'question 17', labels: scale, required: true},
+    {prompt: "At family gatherings, I sometimes confuse individual family members.", name: 'question 18', labels: scale, required: true},
+    {prompt: "I find it easy to recognize celebrities in 'before-they-were-famous' photos, even if they have changed considerably.", name: 'question 19', labels: scale, required: true},
+    {prompt: "It is hard to recognize familiar people when I meet them out of context (e.g. meeting a work colleague unexpectedly while shopping).", name: 'question 20', labels: scale, required: true},
+    {prompt: "My face recognition ability is worse when people wear masks.", name: 'question 21', labels: scale, required: true},
+    {prompt: "When people wear masks, I often mistake people I have met before for strangers.", name: 'question 22', labels: scale, required: true},
+    {prompt: "When people wear masks, I struggle to recognize them without hearing their voices.", name: 'question 23', labels: scale, required: true}
+    ],
+    preamble: 'Please select your answer to the following questions.',
+    dataAsArray: true
+    }
+
+    var pavlovia_finish = {
+    type: "pavlovia",
+    command: "finish"
+};
+
+
+
+jsPsych.init({
+    timeline: [pavlovia_init, welcome, consent, survey, instructions, QE, if_node_QE, QE_2, MC, if_node_MC, NF_75, if_node_NF_75, NF_66, if_node_NF_66,
+               NF_79, if_node_NF_79, JD, if_node_JD, NF_96, if_node_NF_96, NF_100, if_node_NF_100, CH, if_node_CH, BK, if_node_BK, KJ, if_node_KJ, ZE, if_node_ZE,
+               SM, if_node_SM, NF_72, if_node_NF_72, NF_92, if_node_NF_92, NF_85, if_node_NF_85, LJ, if_node_LJ, NF_63, if_node_NF_63, NF_94, if_node_NF_94,
+    MM, if_node_MM, NF_81, if_node_NF_81, BC, if_node_BC, NF_112, if_node_NF_112, AG, if_node_AG, JA, if_node_JA, BE, if_node_BE, NF_71, if_node_NF_71,
+    R, if_node_R, NF_58, if_node_NF_58, BP, if_node_BP, TH, if_node_TH, NF_80, if_node_NF_80, MCyrus, if_node_MCyrus, NF_74, if_node_NF_74, NF_90, if_node_NF_90,
+    NF_86, if_node_NF_86, NF_93, if_node_NF_93, NF_77, if_node_NF_77, SJ, if_node_SJ, EM, if_node_EM, EP, if_node_EP, NF_67, if_node_NF_67, NF_76, if_node_NF_76,
+    NF_108, if_node_NF_108, NF_98, if_node_NF_98, TC, if_node_TC, RR, if_node_RR, MD, if_node_MD, NF_107, if_node_NF_107, NF_91, if_node_NF_91, NF_110, if_node_NF_110,
+    NF_65, if_node_NF_65, CB, if_node_CB, KW, if_node_KW, KK, if_node_KK, BO, if_node_BO, AG,if_node_AG, NF_95, if_node_NF_95, AJ, if_node_AJ, NF_104, if_node_NF_104,
+    KP, if_node_KP, NF_69, if_node_NF_69, NF_101, if_node_NF_101, NF_78, if_node_NF_78, JK, if_node_JK, NF_88, if_node_NF_88, NF_61, if_node_NF_61, NF_82, if_node_NF_82,
+    CE, if_node_CE, DJ, if_node_DJ, MZ, if_node_MZ, NF_111, if_node_NF_111, NF_70, if_node_NF_70, JC, if_node_JC, NF_89, if_node_NF_89, MMonroe, if_node_MMonroe,
+    NF_105, if_node_NF_105, NF_64, if_node_NF_64, WS, if_node_WS, NF_83, if_node_NF_83, HC, if_node_HC, JL, if_node_JL, NF_62, if_node_NF_62, KH, if_node_KH, NF_73, if_node_NF_73,
+    JB, if_node_JB, DS, if_node_DS, NF_103, if_node_NF_103, NF_59, if_node_NF_59, NF_60, if_node_NF_60, NF_84, if_node_NF_84, NF_68, if_node_NF_68, RDJ, if_node_RDJ,
+    RM, if_node_RM, NF_109, if_node_NF_109, A, if_node_A, BA, if_node_BA, DC, if_node_DC, NF_102, if_node_NF_102, CP, if_node_CP, NF_99, if_node_NF_99, DB, if_node_DB,
+    NF_106, if_node_NF_106, SG, if_node_SG, AH, if_node_AH, EW, if_node_EW, NF_57, if_node_NF_57, JT, if_node_JT, HS, if_node_HS, LDC, if_node_LDC, NF_97, if_node_NF_97,
+    NF_87, if_node_NF_87, instructions_2, JK_name, CP_name, BK_name, BA_name, HS_name, AG_name, CH_name, CB_name, BO_name, BC_name, EP_name, KW_name, DS_name, MZ_name, ZE_name,
+    BP_name, KP_name, BE_name, KH_name, MD_name, RR_name, JA_name, SM_name, MCyrus_name, LDC_name, JL_name, EM_name, CE_name, LJ_name, SJ_name, JB_name, AJ_name, RDJ_name, MM_name,
+    KJ_name, TC_name, TH_name, AH_name, AG_name, JT_name, RM_name, JD_name, A_name, TS_name, SG_name, MC_name, DB_name, HC_name, WS_name, EW_name, R_name, DJ_name, JC_name, MMonroe_name, DC_name,
+    KK_name, likert_trial, pavlovia_finish],
+    on_finish: function () {
+        document.body.innerHTML = '<p>You have completed the experiment. Thank you for participating. Please wait, you will be redirected back to Prolific in a few moments.</p>'
+        setTimeout(function () { location.href = "https://app.prolific.co/submissions/complete?cc=11E83998" }, 10000)
+      }
+});
+    </script>
+</body>
